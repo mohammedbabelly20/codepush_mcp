@@ -1,0 +1,12 @@
+[project]
+name = "codepush-mcp-server"
+version = "0.1.0"
+description = "MCP server for CodePush read-only API using FastAPI and FastMCP"
+requires-python = ">=3.11"
+
+dependencies = [
+    "fastmcp",
+    "requests>=2.32.4",
+    "ruff>=0.12.1",
+]
+
