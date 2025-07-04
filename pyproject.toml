@@ -1,7 +1,13 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "codepush-mcp-server"
 version = "0.1.0"
-description = "MCP server for CodePush read-only API using FastAPI and FastMCP"
+description = "MCP server for Codemagic Codepush read-only API using FastMCP"
+authors = [{name = "Mohammed Babelly", email = "mohammed@nevercode.io"}]
+readme = "README.md"
 requires-python = ">=3.11"
 
 dependencies = [
@@ -9,4 +15,10 @@ dependencies = [
     "requests>=2.32.4",
     "ruff>=0.12.1",
 ]
+
+[project.scripts]
+codepush-mcp-server = "codepush_mcp.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
 

@@ -5,13 +5,15 @@ import os
 
 SERVER_URL = "https://codepush.pro"
 
-mcp = FastMCP(name="CodePush MCP Server")
+mcp = FastMCP(name="Codepush MCP Server")
+
 
 def _get_client() -> CodePushClient:
-    access_key = os.environ.get("CODEPUSH_ACCESS_KEY1")
+    access_key = os.environ.get("CODEPUSH_ACCESS_KEY")
     if not access_key:
-        raise ValueError("CODEPUSH_ACCESS_KEY1 environment variable is not set")
+        raise ValueError("CODEPUSH_ACCESS_KEY environment variable is not set")
     return CodePushClient(server_url=SERVER_URL, access_key=access_key)
+
 
 @mcp.tool(description="Verify access key validity")
 def auth() -> dict[str, Any]:
@@ -19,17 +21,20 @@ def auth() -> dict[str, Any]:
     client = _get_client()
     return client.authenticate()
 
+
 @mcp.tool(description="Get current user information")
 def whoami() -> dict[str, Any]:
     """Get information about the current authenticated user."""
     client = _get_client()
     return client.get_account_info()
 
+
 @mcp.tool(description="List all CodePush apps")
 def listApps() -> dict[str, Any]:
     """List all CodePush apps available to the authenticated user."""
     client = _get_client()
     return client.list_apps()
+
 
 @mcp.tool(description="List deployments for an app")
 def listDeployments(appName: str) -> dict[str, Any]:
@@ -40,6 +45,7 @@ def listDeployments(appName: str) -> dict[str, Any]:
     """
     client = _get_client()
     return client.list_deployments(appName)
+
 
 @mcp.tool(description="Get release history for a deployment")
 def getDeploymentHistory(appName: str, deploymentName: str) -> dict[str, Any]:
