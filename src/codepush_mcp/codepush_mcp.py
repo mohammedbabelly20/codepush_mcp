@@ -1,4 +1,5 @@
 from fastmcp import FastMCP
+from fastmcp.server.dependencies import get_http_headers
 from typing import Any
 from client import CodePushClient
 import os
@@ -9,9 +10,10 @@ mcp = FastMCP(name="Codemagic Codepush MCP Server")
 
 
 def _get_client() -> CodePushClient:
-    access_key = os.environ.get("CODEPUSH_ACCESS_KEY")
+    headers = get_http_headers()
+    access_key = headers.get("x-auth-token")
     if not access_key:
-        raise ValueError("CODEPUSH_ACCESS_KEY environment variable is not set")
+        raise ValueError("Codepush access key is required in headers as 'x-auth-token'")
     return CodePushClient(server_url=SERVER_URL, access_key=access_key)
 
 
