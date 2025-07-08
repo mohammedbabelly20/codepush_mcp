@@ -5,7 +5,7 @@ import os
 
 SERVER_URL = "https://codepush.pro"
 
-mcp = FastMCP(name="Codepush MCP Server")
+mcp = FastMCP(name="Codemagic Codepush MCP Server")
 
 
 def _get_client() -> CodePushClient:
