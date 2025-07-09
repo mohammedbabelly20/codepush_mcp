@@ -11,9 +11,8 @@ mcp = FastMCP(name="Codemagic Codepush MCP Server")
 
 def _run_codepush_cli(args: list[str]) -> dict[str, Any]:
     try:
-        print(f'Running code-push with args: {["code-push"] + args}')
         result = subprocess.run(
-            ["code-push"] + args,
+            ["npx", "--yes", "@codemagic/code-push-cli"] + args,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             check=True,
@@ -25,6 +24,10 @@ def _run_codepush_cli(args: list[str]) -> dict[str, Any]:
         raise RuntimeError(f"error: {e.stderr.strip() or str(e)}")
 
 
+def show_codepush_cli_version() -> dict[str, Any]:
+    return _run_codepush_cli(["whoami"])
+
+
 @mcp.tool(description="Login to CodePush with access key")
 def login() -> dict[str, Any]:
     """
@@ -33,19 +36,19 @@ def login() -> dict[str, Any]:
     """
     access_key = os.environ.get("CODEPUSH_ACCESS_KEY")
     if not access_key:
-        raise ValueError("CODEPUSH_ACCESS_KEY environment variable is not set")    
-    
-    try:
-        result = subprocess.run(
-            ["code-push", "login", SERVER_URL, "--access-key", access_key],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-        )
-        return result.stdout.strip()
-    except subprocess.CalledProcessError as e:
-        raise RuntimeError(f"Failed to login: {login.stderr.strip()}")
-    
+        raise ValueError("CODEPUSH_ACCESS_KEY environment variable is not set")
+
+    return _run_codepush_cli(["login", SERVER_URL, "--access-key", access_key])
+
+
+@mcp.tool(description="Logout from CodePush")
+def logout() -> dict[str, Any]:
+    """
+    Logout from CodePush server.
+    This tool should be run to clear the authentication state.
+    """
+    return _run_codepush_cli(["logout"])
+
 
 @mcp.tool(description="Get current user information")
 def whoami() -> dict[str, Any]:
